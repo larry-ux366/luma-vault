@@ -13,3 +13,8 @@ The Master PW gates this app's read/edit/delete operations. It does not encrypt 
 GitHub Pages is a small entry page that opens the Google-protected app. No account data/passwords are committed. The prior browser-local app remains at `local-vault.html` for backup; its records are not automatically migrated.
 
 Validation: JavaScript syntax and mocked server checks for lock enforcement, master verification, legacy rows, category saving, stale edits and session revocation. No live account records modified for tests.
+
+## Device fingerprint unlock
+After unlocking with Master PW, select the fingerprint icon to enroll this device. A top-level GitHub Pages bridge uses a platform passkey with required user verification and the WebAuthn PRF extension to encrypt the password-derived unlock proof using AES-GCM. Only the encrypted proof and credential metadata are retained in this browser. Message exchange is pinned to the deployed Apps Script sandbox origin, the popup window, and a per-request nonce. Master PW remains the fallback. Unsupported PRF providers fail closed; they do not enable fingerprint unlock. The OS may use fingerprint, face verification or device PIN.
+
+This is device/browser-specific convenience unlock, not a replacement for the owner-only Google account requirement. Clearing browser data requires enrollment again. An Apps Script sandbox-origin change requires updating the pinned bridge origin before re-enrollment. Authenticator behavior was tested with mocks; actual phone passkey enrollment requires the user's participation.
