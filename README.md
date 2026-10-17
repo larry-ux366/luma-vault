@@ -1,13 +1,15 @@
-# Luma — My Passwords
+# Luma
 
-The GitHub Pages entry page opens a private Google Apps Script web app. The web app reads and updates one Google Sheet, so the same list is available on phone and computer when signed into the owner's Google account.
+Minimal password storage backed by the owner's private Google Sheet and an owner-only Apps Script deployment.
 
-## Use
-Open the GitHub Pages site and select **My Passwords ဖွင့်ရန်**. Sign into the authorized Google account. The Apps Script deployment is owner-only. There is no separate master password for this Sheet-connected version.
+- Add: Title, User Name, PW, Personal/Work.
+- Search icon: enter Master PW, then choose a Title from the dropdown. All matching entries are displayed.
+- Eye icons reveal/hide passwords; copy/edit/delete use icons.
+- On first search, the owner creates the Master PW (12+ characters). This must be set by the owner, not by an agent.
+- Master verification uses a salted PBKDF2-SHA256 proof (600,000 iterations), hashed again server-side. Protected reads require a short-lived server session. Five failures trigger a five-minute cooldown; sessions expire after 15 minutes and the UI locks after five minutes idle.
 
-Account passwords remain readable in the private Google Sheet; this version does not provide client-side encrypted cloud storage. No passwords or account records are committed to this repository.
+The Master PW gates this app's read/edit/delete operations. It does not encrypt the underlying Sheet. Passwords remain readable to the Sheet owner in Google Sheets. Adding a new record still requires the owner's Google session but does not require the search unlock.
 
-The previous encrypted browser-local app is preserved as `local-vault.html`. Existing localStorage is retained on the same GitHub Pages origin. Old local records are not automatically imported into the Sheet; open the old app from the entry page's backup section to export them.
+GitHub Pages is a small entry page that opens the Google-protected app. No account data/passwords are committed. The prior browser-local app remains at `local-vault.html` for backup; its records are not automatically migrated.
 
-## Validation
-The deployed web app loaded the 19 existing account records successfully. Source syntax checks passed. Search and the add-account dialog were checked without changing real account data.
+Validation: JavaScript syntax and mocked server checks for lock enforcement, master verification, legacy rows, category saving, stale edits and session revocation. No live account records modified for tests.
